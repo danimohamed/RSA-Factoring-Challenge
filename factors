@@ -1,32 +1,48 @@
-#!/usr/bin/python3
+#!/usr/bin/env bash
 
-from sys import argv
-from math import sqrt
+check_factor()
+{
+	if [ $# -ne 3 ];
+        then
+                args=("$@")
+                count=0
+                num2=1
+                for a in ${args[*]};
+                do
+                        if [ $count -gt 1 ];
+                        then
+                                num2=$(echo $a*$num2 | bc)
+                        fi
+                        count=$((count + 1))
+                done
+        else
+                num2=$3
+        fi
 
+        num1=$2
+        num=$(echo "$1" | tr ':' '=')
 
-def op_rdfile(file_name):
+        result=$(echo "if($num2 > $num1) 1 else 0" | bc)
+	        if ((result == 1)); then
+		        numcp=$num1
+		        num1=$num2
+		        num2=$numcp
+                fi
 
-    with open(file_name, "r", encoding="utf-8") as file:
-        lines = file.readlines()
-    facts = []
-    for line in lines:
-        facts.append(int(line))
-    return (facts)
+        echo "$num$num1*$num2"
+}
 
+if [ $# -ne 1 ]
+then
+        echo 'Usage: factors <file>'
+        exit 1
+else
 
-def find_mul(y):
+        while read i
+        do
 
-    for x in range(1, y):
-        if y == ((y // x) * x):
-            print("{}={}*{}".format(y, (y // x), x))
-            break
+                result=$(factor "$i")
+                check_factor $result
 
-
-def fact_l(hv):
-
-    for x in hv:
-        find_mul(x)
-
-
-if len(argv) == 2:
-    fact_l(op_rdfile(argv[1]))
+        done < "$1"
+fi
