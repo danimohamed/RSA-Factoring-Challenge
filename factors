@@ -1,0 +1,32 @@
+#!/usr/bin/python3
+
+from sys import argv
+from math import sqrt
+
+
+def op_rdfile(file_name):
+
+    with open(file_name, "r", encoding="utf-8") as file:
+        lines = file.readlines()
+    facts = []
+    for line in lines:
+        facts.append(int(line))
+    return (facts)
+
+
+def find_mul(y):
+
+    for x in range(1, y):
+        if y == ((y // x) * x):
+            print("{}={}*{}".format(y, (y // x), x))
+            break
+
+
+def fact_l(hv):
+
+    for x in hv:
+        find_mul(x)
+
+
+if len(argv) == 2:
+    fact_l(op_rdfile(argv[1]))
